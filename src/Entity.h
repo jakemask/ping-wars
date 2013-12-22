@@ -19,27 +19,31 @@ private:
 		State();
 		~State();
 
-		void addComponent(Component*);
+		template<typename T> void addComponent(Component*);
 		template<typename T> void removeComponent();
 		template<typename T> T* getComponent();
 	};
 
 private:
-
+	std::string name;
 	std::string currentState;
 	std::unordered_map<std::string, State> states;
 
 	Engine* engine;
 
 public:
-	Entity();
+	Entity(std::string);
 	~Entity();
+
+	std::string getName();
 
 	void addState(std::string);
 	void setState(std::string);
 
-	void addComponent(std::string, Component*);
-	void addComponent(Component*);
+	void setEngine(Engine*);
+
+	template<typename T> void addComponent(std::string, T*);
+	template<typename T> void addComponent(T*);
 
 	template<typename T> void removeComponent(std::string);
 	template<typename T> void removeComponent();
@@ -48,12 +52,16 @@ public:
 	template<typename T> T* getComponent();
 
 	std::unordered_map<const type_info*, Component*> getComponents(std::initializer_list<const type_info*> list);
-
-	template<typename... Ts> bool hasComponents();
+	bool hasComponents(std::initializer_list<const type_info*>);
 
 };
 
 /* State */
+
+template<typename T>
+void Entity::State::addComponent(Component* c) {
+	this->components[&typeid(T)] = c;
+}
 
 template<typename T>
 void Entity::State::removeComponent() {
@@ -74,6 +82,18 @@ T* Entity::State::getComponent() {
 /* Entity */
 
 template<typename T>
+void Entity::addComponent(std::string state, T* c) {
+	this->states.at(state).addComponent<T>(c);
+	if (state == currentState && engine) engine->updateEntity(this);
+}
+
+template<typename T>
+void Entity::addComponent(T* c) {
+	this->addComponent<T>(currentState, c);
+}
+
+
+template<typename T>
 void Entity::removeComponent(std::string state) {
 	this->states.at(state).removeComponent<T>();
 	if (state == currentState) engine->updateEntity(this);
@@ -91,14 +111,5 @@ T* Entity::getComponent(std::string state) {
 template<typename T>
 T* Entity::getComponent() {
 	return static_cast<T*>(this->getComponent<T>(currentState));
-}
-
-template<typename... Cs>
-bool Entity::hasComponents() {
-	bool has = true;
-
-	[](...){}((has &= this->getComponent<Cs>() != NULL)...);
-
-	return has;
 }
 

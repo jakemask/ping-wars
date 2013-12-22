@@ -13,9 +13,7 @@ Entity::State::~State()
 	}
 }
 
-void Entity::State::addComponent(Component* c) {
-	this->components[&typeid(*c)] = c;
-}
+
 
 
 
@@ -23,8 +21,12 @@ void Entity::State::addComponent(Component* c) {
 
 /* Entity */
 
-Entity::Entity() {}
+Entity::Entity(std::string name) : currentState(""), engine(NULL), name(name) {
+	this->states[currentState];
+}
 Entity::~Entity() {}
+
+std::string Entity::getName() { return name; }
 
 void Entity::addState(std::string state) {
 	this->states[state];
@@ -32,17 +34,13 @@ void Entity::addState(std::string state) {
 
 void Entity::setState(std::string state) {
 	this->currentState = state;
-	engine->updateEntity(this);
+	if(engine) engine->updateEntity(this);
 }
 
-void Entity::addComponent(std::string state, Component* c) {
-	this->states.at(state).addComponent(c);
-	if(state == currentState) engine->updateEntity(this);
+void Entity::setEngine(Engine* e) {
+	this->engine = e;
 }
 
-void Entity::addComponent(Component* c) {
-	this->addComponent(currentState, c);
-}
 
 std::unordered_map<const type_info*, Component*> Entity::getComponents(std::initializer_list<const type_info*> list) {
 
@@ -51,4 +49,13 @@ std::unordered_map<const type_info*, Component*> Entity::getComponents(std::init
 		map[i] = states[currentState].components[i];
 	}
 	return map;
+}
+
+bool Entity::hasComponents(std::initializer_list<const type_info*> list) {
+	bool has = true;
+	for (const type_info* i : list) {
+		has &= (states[currentState].components.count(i) > 0);
+	}
+
+	return has;
 }

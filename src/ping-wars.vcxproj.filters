@@ -52,14 +52,8 @@
     <ClInclude Include="Component.h">
       <Filter>Engine\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="PingWars.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Family.h">
-      <Filter>Engine\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
       <Filter>Engine\Headers</Filter>
@@ -71,6 +65,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="System.h">
+      <Filter>Engine\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
       <Filter>Engine\Headers</Filter>
     </ClInclude>
   </ItemGroup>

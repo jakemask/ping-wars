@@ -47,6 +47,9 @@ void World::start() {
 		// Update & Render
 		this->states[this->currentState].update(dt);
 
+		for (sf::Drawable* d : this->drawables[currentState])
+			this->window.draw(*d);
+
 		// Draw
 		window.display();
 
@@ -56,6 +59,8 @@ void World::start() {
 		// Calculate next dt
 		auto timeElapsed = std::chrono::steady_clock::now() - startTime;
 		dt = std::chrono::duration_cast<milliseconds>(timeElapsed).count() / 1000.0f;
+
+		if (onDeck != currentState) currentState = onDeck;
 	}
 }
 
@@ -67,7 +72,7 @@ void World::stop() {
 Engine& World::addState(std::string state) {
 	if (state == "") throw std::exception("Empty string is an invalid state name");
 
-	if (states.size() == 0) currentState = state;
+	if (states.size() == 0) currentState = onDeck = state;
 	return this->states[state];
 }
 
@@ -76,5 +81,17 @@ Engine& World::getState(std::string state) {
 }
 
 void World::setState(std::string state) {
-	this->currentState = state;
+	this->onDeck = state;
+}
+
+void World::add(sf::Drawable* d) {
+	drawables[currentState].insert(d);
+}
+
+bool World::contains(sf::Drawable* d) {
+	return drawables[currentState].count(d) > 0;
+}
+
+void World::remove(sf::Drawable* d) {
+	drawables[currentState].erase(d);
 }

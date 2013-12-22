@@ -8,7 +8,6 @@
 #include "Node.h"
 #include "Entity.h"
 #include "System.h"
-#include "Family.h"
 
 class Engine
 {
@@ -29,12 +28,19 @@ public:
 
 	template<class... Cs>
 	void addSystem(System<Cs...>* system, int priority) {
-		system->family = new Family<Cs...>(this->entities);
-		families[system] = system->family;
+		
+		system->family = new Family<Cs...>(system,this->entities);
 
 		if (system->start()) {
+			
+			families[system] = system->family;
+			
 			systems[priority].insert(system);
 			priorities[system] = priority;
+
+		} else {
+			delete system->family;
+			system->family = NULL;
 		}
 	}
 

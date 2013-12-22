@@ -18,6 +18,7 @@ Engine::~Engine()
 
 void Engine::addEntity(Entity* e) {
 	entities.insert(e);
+	e->setEngine(this);
 	for (std::pair<ISystem*, IFamily*> f : families) {
 		f.second->newEntity(e);
 	}
@@ -35,19 +36,6 @@ void Engine::removeEntity(Entity* e) {
 		f.second->removeEntity(e);
 	}
 }
-
-/*
-template<class... Cs>
-void Engine::addSystem(System<Cs...>* system, int priority) {
-	system->family = new Family<Cs...>(this->entities);
-	families[system] = system->family;
-
-	if (system->start()) {
-		systems[priority].insert(system);
-		priorities[system] = priority;
-	}
-}
-*/
 
 void Engine::removeSystem(ISystem* system) {
 
