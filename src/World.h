@@ -14,6 +14,8 @@ private:
 
 	std::string currentState;
 	std::string onDeck;
+	bool destructOld;
+
 	std::unordered_map<std::string, Engine> states;
 	std::unordered_map<std::string, std::unordered_set<sf::Drawable*>> drawables;
 
@@ -33,7 +35,7 @@ public:
 
 	Engine& addState(std::string);
 	Engine& getState(std::string);
-	void setState(std::string);
+	void setState(std::string, bool);
 
 	void add(sf::Drawable*);
 	bool contains(sf::Drawable*);

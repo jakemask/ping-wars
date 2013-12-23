@@ -9,11 +9,12 @@ Engine::Engine()
 Engine::~Engine()
 {
 	for (Entity* e : entities) delete e;
-	for (std::pair<ISystem*, IFamily*> f : families) delete f.second;
+	for (std::pair<ISystem*, IFamily*> f : families) {
+		delete f.first;
+		delete f.second;
+	}
 
-	for (std::pair<int, std::unordered_set<ISystem*>> p : systems)
-		for (ISystem* s : p.second)
-			delete s;
+	
 }
 
 void Engine::addEntity(Entity* e) {
@@ -48,6 +49,10 @@ void Engine::removeSystem(ISystem* system) {
 
 	// stop the system
 	system->stop();
+
+	// destruct the family
+	delete families[system];
+	families.erase(system);
 
 
 	// if there are no systems left at this level, remove it

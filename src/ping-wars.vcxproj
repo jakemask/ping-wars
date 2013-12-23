@@ -101,7 +101,6 @@
     <ClInclude Include="System.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="PingWars.h" />
-    <ClInclude Include="SplashNode.h" />
     <ClInclude Include="SplashSystem.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

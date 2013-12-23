@@ -61,9 +61,6 @@
     <ClInclude Include="SplashSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SplashNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="System.h">
       <Filter>Engine\Headers</Filter>
     </ClInclude>

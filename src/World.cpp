@@ -16,7 +16,11 @@ const int World::DEFAULT_FPS = 60;
 World::World(int w, int h, std::string name) : World(w, h, name, DEFAULT_FPS) {}
 
 World::World(int w, int h, std::string name, int fps)
-	: window(sf::VideoMode(w, h), name), currentState(""), fps(fps) {}
+	: window(sf::VideoMode(w, h), name),
+	  currentState(""),
+	  onDeck(""),
+	  destructOld(false),
+	  fps(fps) {}
 
 World::~World() {}
 
@@ -60,7 +64,14 @@ void World::start() {
 		auto timeElapsed = std::chrono::steady_clock::now() - startTime;
 		dt = std::chrono::duration_cast<milliseconds>(timeElapsed).count() / 1000.0f;
 
-		if (onDeck != currentState) currentState = onDeck;
+		if (onDeck != currentState) {
+			if (destructOld) {
+				this->states.erase(currentState);
+				destructOld = false;
+			}
+			currentState = onDeck;
+
+		}
 	}
 }
 
@@ -80,8 +91,9 @@ Engine& World::getState(std::string state) {
 	return this->states.at(state);
 }
 
-void World::setState(std::string state) {
+void World::setState(std::string state, bool destructOld = false) {
 	this->onDeck = state;
+	this->destructOld = destructOld;
 }
 
 void World::add(sf::Drawable* d) {

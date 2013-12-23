@@ -39,7 +39,7 @@ void SplashSystem::update(float dt) {
 	for (Node<SoundComponent, ImageComponent>* n : this->family->getNodeList()) {
 
 		if (n->getComponent<SoundComponent>()->sound.getStatus() == sf::Sound::Status::Stopped) {
-			theWorld.setState("menu");
+			theWorld.setState("menu",true);
 		}
 
 		ImageComponent* ic = n->getComponent<ImageComponent>();
